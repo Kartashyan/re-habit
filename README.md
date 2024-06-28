@@ -1,6 +1,4 @@
-# Welcome to Remix!
-
-- 📖 [Remix docs](https://remix.run/docs)
+# Rehabit your habits with Rehabit!
 
 ## Development
 
