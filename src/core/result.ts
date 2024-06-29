@@ -6,10 +6,16 @@ export class Result<T = void, D = string> {
     ) {}
 
     public static ok<U>(value?: U): Result<U> {
-        return new Result<U>(true, value);
+        if (typeof value === 'undefined') {
+            return new Result<U>(true, null, null);
+        }
+        return new Result<U>(true, value, null);
     }
 
-    public static fail<U>(error: string): Result<U> {
+    public static fail<U>(error?: string): Result<U> {
+        if (typeof error === 'undefined') {
+            return new Result<U>(false, null, null);
+        }
         return new Result<U>(false, null, error);
     }
 }
