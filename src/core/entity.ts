@@ -2,13 +2,17 @@ import { UID } from "./id";
 
 export class Entity<T> {
     protected readonly _id: UID
-    constructor(private readonly props: T, id?: UID) {
-        this.props = props;
+    constructor(private readonly _props: T, id?: UID) {
+        this._props = _props;
         this._id = id ? id : new UID();
     }
 
     get id(): UID {
         return this._id;
+    }
+
+    get props(): T {
+        return Object.freeze(this._props);
     }
 
     public equals(entity?: Entity<T>): boolean {
@@ -19,7 +23,7 @@ export class Entity<T> {
             return false;
         }
 
-        if (typeof this.props !== 'object' || typeof entity.props !== 'object') {
+        if (typeof this._props !== 'object' || typeof entity._props !== 'object') {
             return false;
         }
 
