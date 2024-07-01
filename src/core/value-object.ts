@@ -1,21 +1,21 @@
-interface ValueObjectProps {
-    [index: string]: any;
-}
+export class ValueObject<T> {
+    protected readonly props: T;
 
-export class ValueObject<T extends ValueObjectProps> {
-    public readonly value: T;
-
-    constructor(value: T) {
-        this.value = {...value};
+    constructor(props: T) {
+        this.props = {...props};
     }
 
     public equals(vo?: ValueObject<T>): boolean {
         if (vo === null || vo === undefined) {
             return false;
         }
-        if (vo.value === null || vo.value === undefined) {
+        if (vo.props === null || vo.props === undefined) {
             return false;
         }
-        return JSON.stringify(this.value) === JSON.stringify(vo.value);
+        return JSON.stringify(this.props) === JSON.stringify(vo.props);
+    }
+
+    getProps(): T {
+        return Object.freeze(this.props);
     }
 }
