@@ -5,7 +5,7 @@ describe("ValueObject", () => {
   it("should create a value object with the provided value", () => {
     const value = { name: "John", age: 30 };
     const vo = new ValueObject(value);
-    expect(vo.value).toEqual(value);
+    expect(vo.getProps()).toEqual(value);
   });
 
   it("should return true when comparing two value objects with the same value", () => {
