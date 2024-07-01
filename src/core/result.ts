@@ -1,8 +1,8 @@
 export class Result<T = void, D = string> {
     constructor(
         public readonly isSuccess: boolean,
-        public readonly data?: T | null,
-        public readonly error?: D | null,
+        public readonly data: T | null,
+        public readonly error: D | null,
     ) {}
 
     public static ok<U>(value?: U): Result<U> {
@@ -12,7 +12,7 @@ export class Result<T = void, D = string> {
         return new Result<U>(true, value, null);
     }
 
-    public static fail<U>(error?: string): Result<U> {
+    public static fail<U>(error?: string | null): Result<U> {
         if (typeof error === 'undefined') {
             return new Result<U>(false, null, null);
         }
