@@ -1,22 +1,26 @@
 
-import { Result } from "~/core/result";
+import { DomainError } from "~/core/domain.error";
 import { ValueObject } from "~/core/value-object";
 
 export class Email extends ValueObject<string> {
-    private constructor(email: string) {
-        super(email);
+    private constructor(props: string) {
+        super(props);
     }
 
-    public static create(email: string): Result<Email> {
+    public static create(email: string): Email {
         if (!Email.validate(email)) {
-            Result.fail('Invalid email');
+            throw new DomainError('Invalid email');
         }
 
-        return Result.ok(new Email(email));
+        return new Email(email);
     }
 
     private static validate(email: string): boolean {
-        const re = /\S+@\S+\.\S+/;
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
+    }
+
+    get value() {
+        return this.props;
     }
 }

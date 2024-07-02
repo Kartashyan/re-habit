@@ -1,4 +1,4 @@
-import { Result } from "~/core/result";
+import { DomainError } from "~/core/domain.error";
 import { ValueObject } from "~/core/value-object";
 
 type PasswordValueObjectProps = {
@@ -10,14 +10,14 @@ export class Password extends ValueObject<PasswordValueObjectProps> {
         super(props);
     }
 
-    public static create(value: string): Result<Password> {
+    public static create(value: string): Password {
         if (!Password.isValid(value)) {
-            return Result.fail<Password>('Invalid password');
+            throw new DomainError('Invalid password');
         }
 
-        return Result.ok(new Password({
+        return new Password({
             value,
-        }));
+        });
     }
 
     public get value(): string {
