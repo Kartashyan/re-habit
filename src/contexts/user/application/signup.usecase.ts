@@ -3,34 +3,40 @@ import { Email } from "../domain/email.value-object";
 import { Password } from "../domain/password.value-object";
 import { UserRepository } from "../domain/user-repo.port";
 import { User } from "../domain/user";
+import { DomainError } from "~/core/domain.error";
+
+type CommandDto = {
+    email: string;
+    password: string;
+}
 
 export class SignupUseCase {
     constructor(private readonly userRepo: UserRepository) { }
 
-    async execute(email: string, password: string): Promise<Result<void>> {
-        const passwordOrError = Password.create(password);
-        const emailOrError = Email.create(email);
-        if ([passwordOrError.isSuccess, emailOrError.isSuccess].includes(false)) {
-            return Result.fail('Email or password is invalid');
+    async execute(command: CommandDto): Promise<Result> {
+        let email: Email;
+        let password: Password;
+        try {
+            email = Email.create(command.email);
+            password = Password.create(command.password);
+        } catch (e) {
+            const error = e as DomainError;
+            return Result.fail(error.message);
         }
-
-        const isExist = await this.userRepo.exists(email);
+        console.log("-------email------", email.value);
+        const isExist = await this.userRepo.exists(email.value);
 
         if (isExist) {
             return Result.fail('User already exists');
         }
-        const userOrError = User.create({
+
+        const user = User.create({
             email,
             password,
         });
-        console.log("----42----", userOrError.data);
-        if (!userOrError.isSuccess) {
-            return Result.fail(userOrError.error);
-        }
 
-        if (userOrError.data) {
-            await this.userRepo.save(userOrError.data);
-        }
-        return Result.ok();
+        await this.userRepo.save(user);
+
+        return Result.ok(true);
     }
 }
