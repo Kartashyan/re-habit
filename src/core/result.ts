@@ -1,21 +1,21 @@
-export class Result<T = void, D = string> {
-    constructor(
-        public readonly isSuccess: boolean,
-        public readonly data: T | null,
-        public readonly error: D | null,
-    ) {}
+import { Either, left, right } from './either';
 
-    public static ok<U>(value?: U): Result<U> {
-        if (typeof value === 'undefined') {
-            return new Result<U>(true, null, null);
-        }
-        return new Result<U>(true, value, null);
+export class Result {
+    
+    public static ok<U>(value: U): Either<null, U> {
+        return right(value);
     }
 
-    public static fail<U>(error?: string | null): Result<U> {
-        if (typeof error === 'undefined') {
-            return new Result<U>(false, null, null);
+    public static fail<U>(error: U): Either<U, null> {
+        return left(error);
+    }
+
+    public static combine(results: Either<any, any>[]): Either<any, null> {
+        for (let result of results) {
+            if (result.isLeft()) {
+                return result;
+            }
         }
-        return new Result<U>(false, null, error);
+        return Result.ok(null);
     }
 }
