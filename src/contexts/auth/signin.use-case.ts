@@ -1,4 +1,4 @@
-import { Result } from "~/core/result";
+import { fail, ok, Result } from "~/core/result";
 import { UserServiceInterface } from "../user/user.service.interface";
 import { JwtService } from "./jwt.service";
 import { Password } from "../user/domain/password.value-object";
@@ -12,24 +12,24 @@ export class SigninUseCase {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    async execute(email: string, password: string): Promise<Result> {
+    async execute(email: string, password: string): Promise<Result<string>> {
         try{
             const user = await this.userService.findByEmail(email);
             if (!user) {
-                return Result.fail("User not found");
+                return fail("User not found");
             }
             if (!user.comparePassword(Password.create(password))) {
-                return Result.fail("Invalid email or password");
+                return fail("Invalid email or password");
             }
 
             const token = this.jwtService.generateToken({ id: user.id.value });
 
-            return Result.ok(token);
+            return ok(token);
         } catch (e) {
             if (e instanceof DomainError) {
-                return Result.fail(("Invalid email or password"));
+                return fail(("Invalid email or password"));
             }
-            return Result.fail("Internal server error");
+            return fail("Internal server error");
         }
     }
 }
