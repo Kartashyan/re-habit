@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Result } from "~/core/result";
 import { UserRepository } from "../domain/user-repo.port";
 import { SignupUseCase } from "./signup.usecase";
+import { fail, ok } from "~/core/result";
 
 describe("SignupUseCase", () => {
   let userRepo: UserRepository;
@@ -33,7 +33,7 @@ describe("SignupUseCase", () => {
     const result = await signupUseCase.execute(command);
 
     // Assert
-    expect(result).toEqual(Result.ok(true));
+    expect(result).toEqual(ok(true));
   });
 
   it("should return an error when email or password is invalid", async () => {
@@ -47,7 +47,7 @@ describe("SignupUseCase", () => {
     const result = await signupUseCase.execute(command);
 
     // Assert
-    expect(result).toEqual(Result.fail("Invalid email"));
+    expect(result).toEqual(fail("Invalid email"));
   });
 
   it("should return an error when email or password is invalid", async () => {
@@ -61,7 +61,7 @@ describe("SignupUseCase", () => {
     const result = await signupUseCase.execute(command);
 
     // Assert
-    expect(result).toEqual(Result.fail("Invalid password"));
+    expect(result).toEqual(fail("Invalid password"));
   });
 
   it("should return an error when user already exists", async () => {
@@ -78,6 +78,6 @@ describe("SignupUseCase", () => {
 
     // Assert
     expect(userRepo.exists).toHaveBeenCalledWith(command.email);
-    expect(result).toEqual(Result.fail("User already exists"));
+    expect(result).toEqual(fail("User already exists"));
   });
 });
