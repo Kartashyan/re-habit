@@ -1,21 +1,15 @@
 import { Either, left, right } from './either';
 
-export class Result {
-    
-    public static ok<U>(value: U): Either<null, U> {
-        return right(value);
-    }
+type Success<T> = {
+    success: true;
+    value: T;
+};
+type Failure<E = string> = {
+    success: false;
+    reason: E;
+};
 
-    public static fail<U>(error: U): Either<U, null> {
-        return left(error);
-    }
+export type Result<T, E = string> = Success<T> | Failure<E>;
 
-    public static combine(results: Either<any, any>[]): Either<any, null> {
-        for (let result of results) {
-            if (result.isLeft()) {
-                return result;
-            }
-        }
-        return Result.ok(null);
-    }
-}
+export const ok = <T>(value: T): Success<T> => ({ success: true, value });
+export const fail = <E = string>(reason: E): Failure<E> => ({ success: false, reason});
