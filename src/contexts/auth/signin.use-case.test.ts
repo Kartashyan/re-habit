@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Result } from "~/core/result";
+import { fail, ok, Result } from "~/core/result";
 import { Email } from "../user/domain/email.value-object";
 import { Password } from "../user/domain/password.value-object";
 import { User } from "../user/domain/user";
@@ -45,7 +45,7 @@ describe("SigninUseCase", () => {
         expect(userService.findByEmail).toHaveBeenCalledWith(email);
         expect(user.comparePassword).toHaveBeenCalledWith(expect.any(Password));
         expect(jwtService.generateToken).toHaveBeenCalledWith({ id: user.id.value });
-        expect(result).toEqual(Result.ok(token));
+        expect(result).toEqual(ok(token));
     });
 
     it("should return a failure result when user is not found", async () => {
@@ -57,7 +57,7 @@ describe("SigninUseCase", () => {
         const result = await signinUseCase.execute(email, password);
 
         expect(userService.findByEmail).toHaveBeenCalledWith(email);
-        expect(result).toEqual(Result.fail("User not found"));
+        expect(result).toEqual(fail("User not found"));
     });
 
     it("should return a failure result when invalid email or password is provided", async () => {
@@ -72,7 +72,7 @@ describe("SigninUseCase", () => {
 
         expect(userService.findByEmail).toHaveBeenCalledWith(email);
         expect(user.comparePassword).toHaveBeenCalledWith(expect.any(Password));
-        expect(result).toEqual(Result.fail("Invalid email or password"));
+        expect(result).toEqual(fail("Invalid email or password"));
     });
 
     it("should return a failure result when an error occurs", async () => {
@@ -84,7 +84,7 @@ describe("SigninUseCase", () => {
         const result = await signinUseCase.execute(email, password);
 
         expect(userService.findByEmail).toHaveBeenCalledWith(email);
-        expect(result).toEqual(Result.fail("Internal server error"));
+        expect(result).toEqual(fail("Internal server error"));
     });
 });
 
