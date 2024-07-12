@@ -1,3 +1,4 @@
+import { Result } from "~/core/result";
 import { SignupUseCase } from "./application/signup.usecase";
 import { UserRepository } from "./domain/user-repo.port";
 import { UserLocalMemoryRepositoryAdapter } from "./infrastructure/persistance/user-repo.adapter";
@@ -15,7 +16,7 @@ export class UserService {
         return this.userRepo.findByEmail(email);
     }
 
-    signup(command: { email: string, password: string }) {
+    signup(command: { email: string, password: string }): Promise<Result<true>> {
         return this.signupUseCase.execute(command);
     }
 }
