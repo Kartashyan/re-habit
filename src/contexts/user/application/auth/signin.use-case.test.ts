@@ -1,19 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fail, ok, Result } from "~/core/result";
-import { Email } from "../user/domain/email.value-object";
-import { Password } from "../user/domain/password.value-object";
-import { User } from "../user/domain/user";
-import { UserServiceInterface } from "../user/user.service.interface";
+import { fail, ok } from "~/core/result";
+import { Email } from "../../domain/email.value-object";
+import { Password } from "../../domain/password.value-object";
+import { User } from "../../domain/user";
+import { UserRepository } from "../../domain/user-repo.port";
 import { JwtService } from "./jwt.service";
 import { SigninUseCase } from "./signin.use-case";
 
 describe("SigninUseCase", () => {
-    let userService: UserServiceInterface;
+    let userRepo: UserRepository;
     let jwtService: JwtService;
     let signinUseCase: SigninUseCase;
 
     beforeEach(() => {
-        userService = {
+        userRepo = {
             findByEmail: vi.fn(),
             save: vi.fn(),
             exists: vi.fn(),
@@ -23,7 +23,7 @@ describe("SigninUseCase", () => {
             generateToken: vi.fn(),
             verifyToken: vi.fn(),
         };
-        signinUseCase = new SigninUseCase(userService, jwtService);
+        signinUseCase = new SigninUseCase(userRepo, jwtService);
     });
 
     afterEach(() => {
@@ -36,13 +36,13 @@ describe("SigninUseCase", () => {
         const user = User.create({ email: Email.create(email), password: Password.create(password) });
         const token = "token";
 
-        vi.spyOn(userService, "findByEmail").mockResolvedValue(user);
+        vi.spyOn(userRepo, "findByEmail").mockResolvedValue(user);
         user.comparePassword = vi.fn().mockReturnValue(true);
         vi.spyOn(jwtService, "generateToken").mockReturnValue(token);
 
         const result = await signinUseCase.execute(email, password);
 
-        expect(userService.findByEmail).toHaveBeenCalledWith(email);
+        expect(userRepo.findByEmail).toHaveBeenCalledWith(email);
         expect(user.comparePassword).toHaveBeenCalledWith(expect.any(Password));
         expect(jwtService.generateToken).toHaveBeenCalledWith({ id: user.id.value });
         expect(result).toEqual(ok(token));
@@ -52,11 +52,11 @@ describe("SigninUseCase", () => {
         const email = "test@example.com";
         const password = "password";
 
-        vi.spyOn(userService, "findByEmail").mockResolvedValue(null);
+        vi.spyOn(userRepo, "findByEmail").mockResolvedValue(null);
 
         const result = await signinUseCase.execute(email, password);
 
-        expect(userService.findByEmail).toHaveBeenCalledWith(email);
+        expect(userRepo.findByEmail).toHaveBeenCalledWith(email);
         expect(result).toEqual(fail("User not found"));
     });
 
@@ -65,12 +65,12 @@ describe("SigninUseCase", () => {
         const password = "password";
         const user = User.create({ email: Email.create(email), password: Password.create(password) });
 
-        vi.spyOn(userService, "findByEmail").mockResolvedValue(user);
+        vi.spyOn(userRepo, "findByEmail").mockResolvedValue(user);
         user.comparePassword = vi.fn().mockReturnValue(false);
 
         const result = await signinUseCase.execute(email, password);
 
-        expect(userService.findByEmail).toHaveBeenCalledWith(email);
+        expect(userRepo.findByEmail).toHaveBeenCalledWith(email);
         expect(user.comparePassword).toHaveBeenCalledWith(expect.any(Password));
         expect(result).toEqual(fail("Invalid email or password"));
     });
@@ -79,11 +79,11 @@ describe("SigninUseCase", () => {
         const email = "test@example.com";
         const password = "password";
 
-        vi.spyOn(userService, "findByEmail").mockRejectedValue(new Error());
+        vi.spyOn(userRepo, "findByEmail").mockRejectedValue(new Error());
 
         const result = await signinUseCase.execute(email, password);
 
-        expect(userService.findByEmail).toHaveBeenCalledWith(email);
+        expect(userRepo.findByEmail).toHaveBeenCalledWith(email);
         expect(result).toEqual(fail("Internal server error"));
     });
 });

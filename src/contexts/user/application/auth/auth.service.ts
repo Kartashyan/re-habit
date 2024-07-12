@@ -1,4 +1,4 @@
-import { UserService } from "../user/user.service.injection";
+import { UserService } from "../../user.service.injection";
 import { JwtService } from "./jwt.service";
 
 export class AuthService {

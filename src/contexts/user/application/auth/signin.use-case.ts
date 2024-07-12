@@ -1,20 +1,19 @@
-import { fail, ok, Result } from "~/core/result";
-import { UserServiceInterface } from "../user/user.service.interface";
-import { JwtService } from "./jwt.service";
-import { Password } from "../user/domain/password.value-object";
-import { Either } from "~/core/either";
 import { DomainError } from "~/core/domain.error";
+import { fail, ok, Result } from "~/core/result";
+import { Password } from "../../domain/password.value-object";
+import { UserRepository } from "../../domain/user-repo.port";
+import { JwtService } from "./jwt.service";
 
 export class SigninUseCase {
-    private userService: UserServiceInterface;
+    private readonly userRepo: UserRepository;
     private jwtService: JwtService;
-    constructor(userService: UserServiceInterface, jwtService: JwtService){
-        this.userService = userService;
+    constructor(userRepo: UserRepository, jwtService: JwtService){
+        this.userRepo = userRepo;
         this.jwtService = jwtService;
     }
     async execute(email: string, password: string): Promise<Result<string>> {
         try{
-            const user = await this.userService.findByEmail(email);
+            const user = await this.userRepo.findByEmail(email);
             if (!user) {
                 return fail("User not found");
             }
