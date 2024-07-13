@@ -15,10 +15,10 @@ export class SigninUseCase {
         try{
             const user = await this.userRepo.findByEmail(email);
             if (!user) {
-                return fail("User not found");
+                return fail("[signin.use-case]: User not found");
             }
             if (!user.comparePassword(Password.create(password))) {
-                return fail("Invalid email or password");
+                return fail("[signin.use-case]: Invalid email or password");
             }
 
             const token = this.jwtService.generateToken({ id: user.id.value });
@@ -26,9 +26,9 @@ export class SigninUseCase {
             return ok(token);
         } catch (e) {
             if (e instanceof DomainError) {
-                return fail(("Invalid email or password"));
+                return fail(("[signin.use-case]: Invalid email or password"));
             }
-            return fail("Internal server error");
+            return fail("[signin.use-case]: Internal server error");
         }
     }
 }
