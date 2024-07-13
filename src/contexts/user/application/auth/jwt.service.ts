@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 
 
@@ -9,11 +9,11 @@ export class JwtService {
         }
     }
 
-    public generateToken(payload: any): string {
+    public generateToken(payload: JwtPayload | string): string {
         return jwt.sign(payload, this.secret);
     }
 
-    public verifyToken(token: string): any {
+    public verifyToken(token: string): JwtPayload | string {
         return jwt.verify(token, this.secret);
     }
 }
