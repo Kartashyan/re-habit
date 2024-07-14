@@ -1,5 +1,5 @@
-import { DomainError } from "~/core/domain.error";
-import { fail, ok, Result } from "~/core/result";
+import { DomainError } from "~/shared/core/domain.error";
+import { fail, ok, Result } from "~/shared/core/result";
 import { Password } from "../../domain/password.value-object";
 import { UserRepository } from "../../domain/user-repo.port";
 import { JwtService } from "./jwt.service";

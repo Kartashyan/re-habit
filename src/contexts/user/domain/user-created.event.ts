@@ -1,4 +1,4 @@
-import { DomainEvent } from "~/core/domain-event";
+import { DomainEvent } from "~/shared/core/domain-event";
 import { User } from "./user.aggregate";
 
 export class UserCreatedEvent implements DomainEvent<User> {

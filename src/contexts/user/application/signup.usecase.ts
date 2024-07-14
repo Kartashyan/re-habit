@@ -1,9 +1,9 @@
-import { fail, ok, Result } from "~/core/result";
+import { fail, ok, Result } from "~/shared/core/result";
 import { Email } from "../domain/email.value-object";
 import { Password } from "../domain/password.value-object";
 import { UserRepository } from "../domain/user-repo.port";
 import { User } from "../domain/user.aggregate";
-import { DomainError } from "~/core/domain.error";
+import { DomainError } from "~/shared/core/domain.error";
 
 type CommandDto = {
     email: string;

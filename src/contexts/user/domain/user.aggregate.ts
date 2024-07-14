@@ -1,5 +1,5 @@
-import { AggregateRoot } from "~/core/aggregate-root";
-import { UID } from "~/core/id";
+import { AggregateRoot } from "~/shared/core/aggregate-root";
+import { UID } from "~/shared/core/id";
 import { Email } from "./email.value-object";
 import { Password } from "./password.value-object";
 import { UserCreatedEvent } from "./user-created.event";

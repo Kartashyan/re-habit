@@ -1,5 +1,5 @@
-import { DomainError } from "~/core/domain.error";
-import { ValueObject } from "~/core/value-object";
+import { DomainError } from "~/shared/core/domain.error";
+import { ValueObject } from "~/shared/core/value-object";
 
 type PasswordValueObjectProps = {
     value: string;

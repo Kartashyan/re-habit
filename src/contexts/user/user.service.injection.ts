@@ -1,4 +1,4 @@
-import { fail, ok, Result } from "~/core/result";
+import { fail, ok, Result } from "~/shared/core/result";
 import { SignupUseCase } from "./application/signup.usecase";
 import { UserRepository } from "./domain/user-repo.port";
 import { UserModel } from "./domain/user.model";
