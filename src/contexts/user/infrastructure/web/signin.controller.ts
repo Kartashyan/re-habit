@@ -1,4 +1,5 @@
 import { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { UserService } from "../../user.service.injection";
 
 export const action: ActionFunction = async ({ request }) => {
     const body = new URLSearchParams(await request.text());
@@ -10,6 +11,8 @@ export const action: ActionFunction = async ({ request }) => {
             status: 400,
         });
     }
+
+    const userService = new UserService();
 
     return new Response("Sign in successful", {
         status: 200,
