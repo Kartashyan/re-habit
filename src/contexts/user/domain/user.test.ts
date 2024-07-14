@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { User } from "./user";
+import { User } from "./user.aggregate";
 import { Email } from "./email.value-object";
 import { Password } from "./password.value-object";
 

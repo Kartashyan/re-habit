@@ -1,5 +1,5 @@
 import { DomainEvent } from "~/core/domain-event";
-import { User } from "./user";
+import { User } from "./user.aggregate";
 
 export class UserCreatedEvent implements DomainEvent<User> {
     public readonly name = "user.created";

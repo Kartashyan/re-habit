@@ -1,4 +1,4 @@
-import { User } from "../domain/user";
+import { User } from "../domain/user.aggregate";
 import { UserModel } from "../domain/user.model";
 
 export class UserMapper {

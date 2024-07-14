@@ -1,4 +1,4 @@
-import { User } from "../../domain/user";
+import { User } from "../../domain/user.aggregate";
 import { UserRepository } from "../../domain/user-repo.port";
 
 export class UserLocalMemoryRepositoryAdapter implements UserRepository {

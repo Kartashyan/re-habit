@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fail, ok } from "~/core/result";
 import { Email } from "../../domain/email.value-object";
 import { Password } from "../../domain/password.value-object";
-import { User } from "../../domain/user";
+import { User } from "../../domain/user.aggregate";
 import { UserRepository } from "../../domain/user-repo.port";
 import { JwtService } from "./jwt.service";
 import { SigninUseCase } from "./signin.use-case";

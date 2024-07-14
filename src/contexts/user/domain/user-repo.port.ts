@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "./user.aggregate";
 
 export interface UserRepository {
     findByEmail: (email: string) => Promise<User | null>;
