@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction } from "@remix-run/node";
+import { ActionFunction } from "@remix-run/node";
 import { UserService } from "../../user.service.injection";
 
 export const action: ActionFunction = async ({ request }) => {
