@@ -1,10 +1,16 @@
-import { ActionFunction } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
-import { action as signInController } from "~/contexts/user/infrastructure/web/signin.controller";
 import { Button } from "~/shared/ui-lib/button";
 import { Input } from "~/shared/ui-lib/input";
+import { ActionFunction } from "@remix-run/node";
+import { authenticator, EMAIL_PASSWORD_STRATEGY } from "~/infra/auth/authenticator.server";
 
-export const action: ActionFunction = signInController;
+export const action: ActionFunction = async ({ request }) => {
+    return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
+        successRedirect: "/app",
+        failureRedirect: "/login",
+      });
+}
+
 
 export default function Login() {
     const actionData = useActionData<typeof action>();
