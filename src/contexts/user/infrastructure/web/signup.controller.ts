@@ -1,5 +1,5 @@
 import { ActionFunction, redirect } from "@remix-run/node";
-import { UserService } from "../../user.service.injection";
+import { userService } from "../../user.service.injection";
 
 export const action: ActionFunction = async ({ request }) => {
     const body = new URLSearchParams(await request.text());
@@ -15,7 +15,7 @@ export const action: ActionFunction = async ({ request }) => {
             },
           });
     }
-    const userService = new UserService();
+    
     await userService.signup({ email, password });
 
     return redirect("/login");
