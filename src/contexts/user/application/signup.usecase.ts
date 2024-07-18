@@ -4,6 +4,7 @@ import { Password } from "../domain/password.value-object";
 import { UserRepository } from "../domain/user-repo.port";
 import { User } from "../domain/user.aggregate";
 import { DomainError } from "~/shared/core/domain.error";
+import { PasswordService } from "../infrastructure/service/password.service";
 
 type CommandDto = {
     email: string;
@@ -23,16 +24,17 @@ export class SignupUseCase {
             const error = e as DomainError;
             return fail(error.message);
         }
-        console.log("-------email------", email.value);
+
         const isExist = await this.userRepo.exists(email.value);
 
         if (isExist) {
             return fail('User already exists');
         }
-
+        const hashedPassword = password.hash();
+        
         const user = User.create({
             email,
-            password,
+            hashedPassword,
         });
 
         await this.userRepo.save(user);
