@@ -1,20 +1,9 @@
 import { ActionFunction } from "@remix-run/node";
-import { UserService } from "../../user.service.injection";
+import { authenticator, EMAIL_PASSWORD_STRATEGY } from "~/infra/auth/authenticator.server";
 
 export const action: ActionFunction = async ({ request }) => {
-    const body = new URLSearchParams(await request.text());
-    const email = body.get("email");
-    const password = body.get("password");
-
-    if (!email || !password) {
-        return new Response("Email and password are required", {
-            status: 400,
-        });
-    }
-
-    const userService = new UserService();
-
-    return new Response("Sign in successful", {
-        status: 200,
-    });
+    return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
+        successRedirect: "/app",
+        failureRedirect: "/login",
+      });
 }
