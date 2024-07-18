@@ -10,7 +10,7 @@ describe("User", () => {
         const password = Password.create("password");
 
         // Act
-        const user = User.create({ email, password });
+        const user = User.create({ email, hashedPassword: password });
 
         // Assert
         expect(user).toBeDefined();
