@@ -1,10 +1,31 @@
-import { ActionFunction } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
-import { action as signupController } from "~/contexts/user/infrastructure/web/signup.controller";
 import { Button } from "~/shared/ui-lib/button";
 import { Input } from "~/shared/ui-lib/input";
+import { ActionFunction, redirect } from "@remix-run/node";
+import { userService } from "~/contexts/user/user.service.injection";
 
-export const action: ActionFunction = signupController;
+export const action: ActionFunction = async ({ request }) => {
+    const body = new URLSearchParams(await request.text());
+    const email = body.get("email");
+    const password = body.get("password");
+    if (!email || !password) {
+        return new Response(JSON.stringify({errors: {
+            text: "Email and password are required",
+        
+        }}), {
+            headers: {
+              "Content-Type": "application/json; utf-8",
+            },
+          });
+    }
+    
+    await userService.signup({ email, password });
+
+    return redirect("/login");
+}
+
+
+
 
 export default function Signup() {
     const actionData = useActionData<typeof action>();
