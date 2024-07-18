@@ -1,10 +1,9 @@
 import { LoaderFunction } from "@remix-run/node";
+import { authenticator } from "~/infra/auth/authenticator.server";
 
-export const loader: LoaderFunction = async () => {
-    return new Response("Hello, world!", {
-        headers: {
-            "Content-Type": "text/html",
-        },
+export const loader: LoaderFunction = async ({ request }) => {
+    await authenticator.isAuthenticated(request, {
+        failureRedirect: "/login",
     });
 }
 
