@@ -2,18 +2,19 @@ import { DomainError } from "~/shared/core/domain.error";
 import { fail, ok, Result } from "~/shared/core/result";
 import { Password } from "../../domain/password.value-object";
 import { UserRepository } from "../../domain/user-repo.port";
+import { User } from "../../domain/user.aggregate";
 import { JwtService } from "./jwt.service";
+import { HashedPassword } from "../../domain/hashed-password.value-object";
+import { Email } from "../../domain/email.value-object";
 
 export class SigninUseCase {
     private readonly userRepo: UserRepository;
-    private jwtService: JwtService;
-    constructor(userRepo: UserRepository, jwtService: JwtService){
+    constructor(userRepo: UserRepository){
         this.userRepo = userRepo;
-        this.jwtService = jwtService;
     }
-    async execute(email: string, password: string): Promise<Result<string>> {
+    async execute(email: string, password: string): Promise<Result<User>> {
         try{
-            const user = await this.userRepo.findByEmail(email);
+            const user = await this.userRepo.findByEmail(Email.create(email).value);
             if (!user) {
                 return fail("[signin.use-case]: User not found");
             }
@@ -21,9 +22,7 @@ export class SigninUseCase {
                 return fail("[signin.use-case]: Invalid email or password");
             }
 
-            const token = this.jwtService.generateToken({ id: user.id.value });
-
-            return ok(token);
+            return ok(user);
         } catch (e) {
             if (e instanceof DomainError) {
                 return fail(("[signin.use-case]: Invalid email or password"));
